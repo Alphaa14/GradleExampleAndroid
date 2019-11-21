@@ -65,10 +65,10 @@ pipeline {
     stage('Unit test') {
       steps {
         // Compile and run the unit tests for the app and its dependencies
-        sh './gradlew testDebugUnitTest testDebugUnitTest' - fINISHED 
+        sh './gradlew testDebugUnitTest testDebugUnitTest' //- fINISHED 
 
         // Analyse the test results and update the build result as appropriate
-        junit '**/TEST-*.xml' - JUNIT NOT RECOGNIZES AS AN INTERNAL OR EXTERNAL COMMAND
+        junit '**/TEST-*.xml' //- JUNIT NOT RECOGNIZES AS AN INTERNAL OR EXTERNAL COMMAND
       }
     }
     stage('Build APK') {
