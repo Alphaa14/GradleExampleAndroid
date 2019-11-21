@@ -55,7 +55,7 @@ pipeline {
     stage('Compile') {
       steps {
         // Compile the app and its dependencies - SUCCESS
-        sh './gradlew compileDebugSources'
+        sh 'sudo ./gradlew compileDebugSources'
       }
     }
     stage('Unit test') {
