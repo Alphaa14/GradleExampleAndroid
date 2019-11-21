@@ -8,10 +8,6 @@ pipeline {
     tools {
        gradle "gradle562"
     }
-     options {
-        // Stop the build early in case of compile or test failures
-        skipStagesAfterUnstable()
-    }
     // stages
     // {
 
