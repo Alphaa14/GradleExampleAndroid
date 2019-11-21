@@ -12,24 +12,24 @@ pipeline {
         // Stop the build early in case of compile or test failures
         skipStagesAfterUnstable()
     }
-    stages
-    {
+    // stages
+    // {
 
-        stage("Clean")
-        {
-            steps{
-                sh '''gradle --version'''
-                sh './gradlew clean' //run a gradle task
-                echo "The build stage passed..."
-            }
-        }
-        stage("Check Gradle Tasks") {
-            steps{
-                echo "Gradle Tasks..."
-                sh './gradlew tasks'
-                echo "----------------------------------------------"
-            }
-        }
+        // stage("Clean")
+        // {
+        //     steps{
+        //         sh '''gradle --version'''
+        //         sh './gradlew clean' //run a gradle task
+        //         echo "The build stage passed..."
+        //     }
+        // }
+        // stage("Check Gradle Tasks") {
+        //     steps{
+        //         echo "Gradle Tasks..."
+        //         sh './gradlew tasks'
+        //         echo "----------------------------------------------"
+        //     }
+        // }
         // stage('Compile') {
         //     steps {
         //       // Compile the app and its dependencies
@@ -43,32 +43,32 @@ pipeline {
         //         androidLint pattern: '**/lint-results-*.xml'
         //     }
         // }
-        stage("BUILD") {
-            steps{
-                echo "Assemble"
-                sh './gradlew build assembleRelease' //run a gradle task
+        // stage("BUILD") {
+        //     steps{
+        //         echo "Assemble"
+        //         sh './gradlew build assembleRelease' //run a gradle task
 
-            }
-        }
+        //     }
+        // }
 // -------------------Correct Pipeline workflow -----------------------
-//   options {
-//     // Stop the build early in case of compile or test failures
-//     skipStagesAfterUnstable()
-//   }
-//   stages {
+  options {
+    // Stop the build early in case of compile or test failures
+    skipStagesAfterUnstable()
+  }
+  stages {
     stage('Compile') {
       steps {
-        // Compile the app and its dependencies
+        // Compile the app and its dependencies - SUCCESS
         sh './gradlew compileDebugSources'
       }
     }
     stage('Unit test') {
       steps {
         // Compile and run the unit tests for the app and its dependencies
-        sh './gradlew testDebugUnitTest testDebugUnitTest'
+        sh './gradlew testDebugUnitTest testDebugUnitTest' - fINISHED 
 
         // Analyse the test results and update the build result as appropriate
-        junit '**/TEST-*.xml'
+        junit '**/TEST-*.xml' - JUNIT NOT RECOGNIZES AS AN INTERNAL OR EXTERNAL COMMAND
       }
     }
     stage('Build APK') {
@@ -87,30 +87,33 @@ pipeline {
         androidLint pattern: '**/lint-results-*.xml'
       }
     }
-    stage('Deploy') {
-      when {
-        // Only execute this stage when building from the `beta` branch
-        branch 'beta'
-      }
-      environment {
-        // Assuming a file credential has been added to Jenkins, with the ID 'my-app-signing-keystore',
-        // this will export an environment variable during the build, pointing to the absolute path of
-        // the stored Android keystore file.  When the build ends, the temporarily file will be removed.
-        SIGNING_KEYSTORE = credentials('my-app-signing-keystore')
 
-        // Similarly, the value of this variable will be a password stored by the Credentials Plugin
-        SIGNING_KEY_PASSWORD = credentials('my-app-signing-password')
-      }
-      steps {
-        // Build the app in release mode, and sign the APK using the environment variables
-        sh './gradlew assembleRelease'
 
-        // Archive the APKs so that they can be downloaded from Jenkins
-        archiveArtifacts '**/*.apk'
 
-        // Upload the APK to Google Play
-        androidApkUpload googleCredentialsId: 'Google Play', apkFilesPattern: '**/*-release.apk', trackName: 'beta'
-      }
+//     stage('Deploy') {
+//       when {
+//         // Only execute this stage when building from the `beta` branch
+//         branch 'beta'
+//       }
+//       environment {
+//         // Assuming a file credential has been added to Jenkins, with the ID 'my-app-signing-keystore',
+//         // this will export an environment variable during the build, pointing to the absolute path of
+//         // the stored Android keystore file.  When the build ends, the temporarily file will be removed.
+//         SIGNING_KEYSTORE = credentials('my-app-signing-keystore')
+
+//         // Similarly, the value of this variable will be a password stored by the Credentials Plugin
+//         SIGNING_KEY_PASSWORD = credentials('my-app-signing-password')
+//       }
+//       steps {
+//         // Build the app in release mode, and sign the APK using the environment variables
+//         sh './gradlew assembleRelease'
+
+//         // Archive the APKs so that they can be downloaded from Jenkins
+//         archiveArtifacts '**/*.apk'
+
+//         // Upload the APK to Google Play
+//         androidApkUpload googleCredentialsId: 'Google Play', apkFilesPattern: '**/*-release.apk', trackName: 'beta'
+//       }
 //       post {
 //         success {
 //           // Notify if the upload succeeded
